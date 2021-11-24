@@ -9,7 +9,7 @@ const getLocation = function(ip){
 	let loc = geoip.lookup(ip)
 	let res = ""
 	try{
-		res = loc.country
+		res = loc.country + "|" + loc.region
 	}catch(err){
 //		console.log(ip)
 //		console.error(err)
@@ -26,9 +26,12 @@ for(let i=0; i<json.result.peers.length; i++){
 	let j = { 
 		"moniker" : json.result.peers[i].node_info.moniker, 
 		"ip" : json.result.peers[i].remote_ip, 
-		"location" : ""
+		"country" : "",
+		"region" : ""
 	}
-	j.location = getLocation(json.result.peers[i].remote_ip)
+	let geo = getLocation(json.result.peers[i].remote_ip).split("|")
+	j.country = geo[0]
+	j.region = geo[1]
 	
 	resultJson.push(j)		
 }
